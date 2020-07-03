@@ -1,15 +1,13 @@
 package analisisenfrecuencias.FFT;
 
 import analisisenfrecuencias.FFT.HerramientasColor.CanalColor;
-import analisisespacial.Convolucion;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- *
- * @author Angel Nava
+ * @author Jose Nava
  */
 public class Gestor {
 
@@ -21,11 +19,9 @@ public class Gestor {
         this.imagenOriginal = imagenOriginal;
         this.representacionEspacial = new HashMap<HerramientasColor.CanalColor, NumeroComplejo[][]>();
         this.representacionFrecuencias = new HashMap<HerramientasColor.CanalColor, NumeroComplejo[][]>();
-
         for (CanalColor color : HerramientasColor.CanalColor.values()) {
             representacionEspacial.put(color, obtenerDatosPorCanal(imagenOriginal, color));
         }
-
     }
 
     private NumeroComplejo[][] obtenerDatosPorCanal(BufferedImage imagenOriginal, CanalColor color) {
@@ -40,22 +36,21 @@ public class Gestor {
     }
 
     public void aplicarFiltro(NumeroComplejo[][] filtro) {
-
         // recorrer el filtro 
         for (int x = 0; x < this.imagenOriginal.getWidth(); x++) {
-            for (int y = 0; y < this.imagenOriginal.getHeight();y++) {
+            for (int y = 0; y < this.imagenOriginal.getHeight(); y++) {
                 // obtener el color el RGB de la parte de frecuencias
-                if (filtro[x][y].getParteReal()<1){
-                int rgb = obtenerPixelDominioFrecuencias(x,y,true);
-                Color aux = new Color(rgb);
-                int r = (int) (aux.getRed() * filtro[x][y].getParteReal());
-                int g = (int) (aux.getGreen()* filtro[x][y].getParteReal());
-                int b = (int) (aux.getBlue() * filtro[x][y].getParteReal());
-                aux = new Color(r, g, b);
-                setPixelDominioFrecuencias(x,y,true,aux.getRGB());}
+                if (filtro[x][y].getParteReal() < 1) {
+                    int rgb = obtenerPixelDominioFrecuencias(x, y, true);
+                    Color aux = new Color(rgb);
+                    int r = (int) (aux.getRed() * filtro[x][y].getParteReal());
+                    int g = (int) (aux.getGreen() * filtro[x][y].getParteReal());
+                    int b = (int) (aux.getBlue() * filtro[x][y].getParteReal());
+                    aux = new Color(r, g, b);
+                    setPixelDominioFrecuencias(x, y, true, aux.getRGB());
+                }
             }
         }
-
     }
 
     public BufferedImage obtenerImagenFrecuencias(boolean reAjustarCuadrante) {
@@ -63,10 +58,8 @@ public class Gestor {
         int anchoImagen = this.imagenOriginal.getWidth();
         int altoImagen = this.imagenOriginal.getHeight();
         BufferedImage aux = new BufferedImage(anchoImagen, altoImagen, BufferedImage.TYPE_INT_ARGB);
-
         FFTCalculo fft = new FFTCalculo();
         // construir el mapeo de representacion en frecuencias utilizando FFT
-
         for (CanalColor canal : HerramientasColor.CanalColor.values()) {
             NumeroComplejo[][] datos = this.representacionEspacial.get(canal);
             NumeroComplejo[][] transformada = fft.calculateFT(datos, false);
@@ -83,7 +76,6 @@ public class Gestor {
                     int color2 = obtenerColorRealDeFrecuencia(ejeX, ejeY, transformada, canal);
                     int rgb = HerramientasColor.acumularColor(color1, color2);
                     aux.setRGB(x, y, rgb);
-
                 }
             }
         }
@@ -95,10 +87,8 @@ public class Gestor {
         int anchoImagen = this.imagenOriginal.getWidth();
         int altoImagen = this.imagenOriginal.getHeight();
         BufferedImage aux = new BufferedImage(anchoImagen, altoImagen, BufferedImage.TYPE_INT_ARGB);
-
         FFTCalculo fft = new FFTCalculo();
         // construir el mapeo de representacion en frecuencias utilizando FFT
-
         for (CanalColor canal : HerramientasColor.CanalColor.values()) {
             NumeroComplejo[][] datos = this.representacionFrecuencias.get(canal);
             NumeroComplejo[][] transformadaInv = fft.calculateFT(datos, true);
@@ -106,23 +96,20 @@ public class Gestor {
             // crear la imagen del espectro 
             for (int y = 0; y < aux.getHeight(); y++) {
                 for (int x = 0; x < aux.getWidth(); x++) {
-
                     int color = (int) Math.abs(transformadaInv[x][y].getParteReal());
-                    color = Convolucion.validarValor(color);
+                    color = validarValor(color);
                     color = HerramientasColor.obtenerRGBPorCanal(color, canal);
-
                     int rgb = HerramientasColor.acumularColor(aux.getRGB(x, y), color);
                     aux.setRGB(x, y, rgb);
                 }
             }
         }
         return aux;
-
     }
 
     private int obtenerColorRealDeFrecuencia(int ejeX, int ejeY, NumeroComplejo[][] transformada, CanalColor canal) {
         int color = (int) Math.abs(transformada[ejeX][ejeY].getParteReal());
-        color = Convolucion.validarValor(color);
+        color = validarValor(color);
         color = HerramientasColor.obtenerRGBPorCanal(color, canal);
         return color;
     }
@@ -134,33 +121,37 @@ public class Gestor {
         // modificamos la posicion de los cuadrantes 
         int ejeX = encuadre ? (x + (anchoImagen / 2)) % anchoImagen : x;
         int ejeY = encuadre ? (y + (altoImagen / 2)) % altoImagen : y;
-        
         // acumulamos 
         int valorColor = 0;
-        for (CanalColor canal: CanalColor.values()){
-        NumeroComplejo[][] aux = representacionFrecuencias.get(canal);
-        valorColor += obtenerColorRealDeFrecuencia(ejeX, ejeY,aux, canal);
+        for (CanalColor canal : CanalColor.values()) {
+            NumeroComplejo[][] aux = representacionFrecuencias.get(canal);
+            valorColor += obtenerColorRealDeFrecuencia(ejeX, ejeY, aux, canal);
         }
-        
         return valorColor;
     }
 
     private void setPixelDominioFrecuencias(int x, int y, boolean encuadre, int color) {
-         /// obtenemos las dimensiones
+        /// obtenemos las dimensiones
         int anchoImagen = this.imagenOriginal.getWidth();
         int altoImagen = this.imagenOriginal.getHeight();
         // modificamos la posicion de los cuadrantes 
         int ejeX = encuadre ? (x + (anchoImagen / 2)) % anchoImagen : x;
         int ejeY = encuadre ? (y + (altoImagen / 2)) % altoImagen : y;
-        
         // recorrer por canal de color 
-        for (CanalColor canal: CanalColor.values()){
-        NumeroComplejo[][] datos = representacionFrecuencias.get(canal);
-        int nuevo =  HerramientasColor.obtenerValorPorCanal(color, canal);
-        
-        datos[ejeX][ejeY] = new NumeroComplejo(nuevo,nuevo);
-        
+        for (CanalColor canal : CanalColor.values()) {
+            NumeroComplejo[][] datos = representacionFrecuencias.get(canal);
+            int nuevo = HerramientasColor.obtenerValorPorCanal(color, canal);
+            datos[ejeX][ejeY] = new NumeroComplejo(nuevo, nuevo);
         }
-        
+    }
+
+    public static int validarValor(int valor) {
+        if (valor < 0) {
+            return 0;
+        }
+        if (valor > 255) {
+            return 255;
+        }
+        return valor;
     }
 }

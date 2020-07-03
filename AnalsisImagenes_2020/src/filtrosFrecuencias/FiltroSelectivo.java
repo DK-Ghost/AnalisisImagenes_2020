@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package filtrosFrecuencias;
 
 import analisisenfrecuencias.FFT.Gestor;
@@ -18,8 +13,7 @@ import java.util.ArrayList;
 import open.AbrirImagen;
 
 /**
- *
- * @author Sony
+ * @author Jose Nava
  */
 public class FiltroSelectivo extends FiltroFrecuencia {
 
@@ -34,18 +28,13 @@ public class FiltroSelectivo extends FiltroFrecuencia {
 
     public void crearFiltro() {
         int tamanoImagen = (int) dim.getWidth();
-
         for (int i = 0; i < tamanoImagen; i++) {         
-            for (int j = 0; j < tamanoImagen; j++) {
-                
+            for (int j = 0; j < tamanoImagen; j++) {      
                 int u = -1 * (tamanoImagen / 2) + i;
                 int v = (tamanoImagen / 2) - j;
-
                 double r = Math.sqrt(Math.pow(u, 2) + Math.pow(v, 2));
-                // verificamos con respecto al  radio
-                
-                getFiltroEspacial()[i][j] = new NumeroComplejo(1, 1);
-                
+                // verificamos con respecto al  radio              
+                getFiltroEspacial()[i][j] = new NumeroComplejo(1, 1);              
             }
         }  
         this.filtro = FiltroFrecuencia.toImageDeComplejo(super.getFiltroEspacial());        
@@ -66,28 +55,21 @@ public class FiltroSelectivo extends FiltroFrecuencia {
     public void setImagen(Image imagen) {
         this.imagen = imagen;
     }
-    
-    
-    
+       
     public void modificarFiltro(Point select){  
-
       int tamanoImagen = (int) dim.getWidth();
       int n = 5;
-
         for (int i = 0; i < tamanoImagen; i++) {         
-            for (int j = 0; j < tamanoImagen; j++) {
-                
+            for (int j = 0; j < tamanoImagen; j++) {            
                 int u = -1 * (tamanoImagen / 2) + i;
                 int v = (tamanoImagen / 2) - j;
-
                 double r = Math.sqrt(Math.pow(u, 2) + Math.pow(v, 2));
                 // verificamos con respecto al  radio
                 if (i > (select.getX()*2)-n && i < (select.getX()*2)+n) {
                     if (j > (select.getY()*2)-n && j < (select.getY()*2)+n) {
                         getFiltroEspacial()[i][j] = new NumeroComplejo(0, 0);
                     }                    
-                }else{
-                    
+                }else{  
                 }    
             }
         }  

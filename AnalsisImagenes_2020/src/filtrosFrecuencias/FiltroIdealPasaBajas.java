@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package filtrosFrecuencias;
 
 import analisisenfrecuencias.FFT.NumeroComplejo;
@@ -13,8 +8,7 @@ import java.awt.image.BufferedImage;
 import open.AbrirImagen;
 
 /**
- *
- * @author DK Ghost
+ * @author Jose Nava
  */
 public class FiltroIdealPasaBajas extends FiltroFrecuencia{
 
@@ -31,13 +25,11 @@ public class FiltroIdealPasaBajas extends FiltroFrecuencia{
    
     @Override
     public void crearFiltro() {
-       
     int tamanoImagen = (int)dim.getWidth();
     for(int i=0; i < tamanoImagen;i++){
         for(int j=0; j < tamanoImagen;j++){
             int u = -1*(tamanoImagen/2)+i;
-            int v = (tamanoImagen/2)-j;
-            
+            int v = (tamanoImagen/2)-j;  
             double r = Math.sqrt(Math.pow(u,2)+Math.pow(v, 2));
             // verificamos con respecto al  radio
             if(r<=this.radio){
@@ -46,12 +38,10 @@ public class FiltroIdealPasaBajas extends FiltroFrecuencia{
                 // asignamos el valor a la imagen
 //                 bi.setRGB(i, j, new Color(255, 255, 255).getRGB());
             }  else {
-            
                // asignamos el valor al filtro
                getFiltroEspacial()[i][j] = new NumeroComplejo(0, 0);
                // asignamos el valor a la imagen
 //                bi.setRGB(i, j, new Color(0, 0, 0).getRGB());
-            
             }     
         }
     }    
@@ -63,9 +53,6 @@ public class FiltroIdealPasaBajas extends FiltroFrecuencia{
       crearFiltro();
     }
 
-    /**
-     * @return the imagen
-     */
     public Image getImagen() {
         return imagen;
     }

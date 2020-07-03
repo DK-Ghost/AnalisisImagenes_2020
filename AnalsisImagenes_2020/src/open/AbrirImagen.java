@@ -9,6 +9,10 @@ import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+/**
+ * @author Jose Nava
+ */
+
 public class AbrirImagen{
 
     public static Image openImage (){
@@ -67,8 +71,7 @@ public class AbrirImagen{
     public static Image copia(Image imagen) {
         BufferedImage bi = toBufferedImage(imagen);
         return toImage(bi);
-    }
-    
+    }    
 
 }
 

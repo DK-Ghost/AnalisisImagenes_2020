@@ -5,8 +5,7 @@ import java.awt.Dimension;
 import java.awt.Image;
 
 /**
- *
- * @author DK Ghost
+ * @author Jose Nava
  */
 
 public class FiltroGaussiano extends FiltroFrecuencia{
@@ -23,15 +22,12 @@ public class FiltroGaussiano extends FiltroFrecuencia{
     }
    
     @Override
-    public void crearFiltro() {
-       
-    int tamanoImagen = (int)dim.getWidth();
-    
+    public void crearFiltro() { 
+    int tamanoImagen = (int)dim.getWidth();  
     for(int i=0; i < tamanoImagen;i++){
         for(int j=0; j < tamanoImagen;j++){
             int u = -1*(tamanoImagen/2)+i;
-            int v = (tamanoImagen/2)-j;
-            
+            int v = (tamanoImagen/2)-j;          
             double r = Math.sqrt(Math.pow(u,2)+Math.pow(v, 2));
             // verificamos con respecto al  radio
             if(r<=this.radio){
@@ -40,12 +36,10 @@ public class FiltroGaussiano extends FiltroFrecuencia{
                 // asignamos el valor a la imagen
 //                 bi.setRGB(i, j, new Color(255, 255, 255).getRGB());
             }  else {
-            
                // asignamos el valor al filtro
                getFiltroEspacial()[i][j] = new NumeroComplejo(0, 0);
                // asignamos el valor a la imagen
 //                bi.setRGB(i, j, new Color(0, 0, 0).getRGB());
-            
             }     
         }
     }  
@@ -58,12 +52,8 @@ public class FiltroGaussiano extends FiltroFrecuencia{
       crearFiltro();
     }
 
-    /**
-     * @return the imagen
-     */
     public Image getImagen() {
         return imagen;
     }
-    
     
 }

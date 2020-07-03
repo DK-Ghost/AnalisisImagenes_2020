@@ -5,6 +5,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+/**
+ * @author Jose Nava
+ */
+
 public class JframeImagen extends JFrame{
 
     private Image imagenOriginal;
@@ -32,6 +36,7 @@ public class JframeImagen extends JFrame{
     public Image getImagenOriginal(){
         return this.imagenOriginal;
     }
+    
     public void setImagenOriginal(Image aux){
         this.imagenOriginal = aux;
     }
